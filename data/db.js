@@ -1,15 +1,18 @@
 import mysql from "mysql2";
 
 const connection = mysql.createConnection({
-  host: process.env.DB_HOST || "localhost",
-  user: process.env.DB_USER || "root",
-  password: process.env.DB_PASSWORD || "",
-  database: process.env.DB_NAME,
+  host: "localhost",
+  user: "root",
+  password: "root",
+  database: "db_movies",
 });
 
 connection.connect((err) => {
-  if (err) throw err;
-  console.log("Connessione al DB avvenuta con successo");
+  if (err) {
+    console.error("Errore di connessione al database:", err.stack);
+    return;
+  }
+  console.log("Connessione al database MySQL stabilita con successo!");
 });
 
 export default connection;
