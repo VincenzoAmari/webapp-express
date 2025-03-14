@@ -1,47 +1,72 @@
+// controllers/movieController.js
 import connection from "../data/db.js";
 
-// Ottenere tutti i film
-export function getAllMovies(req, res) {
+function index(req, res) {
   const sql = "SELECT * FROM movies";
 
   connection.query(sql, (err, results) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json({ error: "Errore nel recupero dei film" });
-    }
+    if (err)
+      return res
+        .status(500)
+        .json({ error: "Errore lato server INDEX function" });
 
-    res.json(results);
+    const movies = results.map((movie) => {
+      return {
+        ...movie,
+        image: req.imagePath + movie.image,
+      };
+    });
+
+    res.json(movies);
   });
 }
 
-// Ottenere un singolo film con le recensioni
-export function getMovieById(req, res) {
+function show(req, res) {
   const { id } = req.params;
 
   const movieSql = "SELECT * FROM movies WHERE id = ?";
   const reviewsSql = "SELECT * FROM reviews WHERE movie_id = ?";
 
-  connection.query(movieSql, [id], (err, movieResults) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json({ error: "Errore nel recupero del film" });
-    }
-    if (movieResults.length === 0) {
-      return res.status(404).json({ error: "Film non trovato" });
-    }
+  connection.query(movieSql, [id], (err, results) => {
+    if (err)
+      return res
+        .status(500)
+        .json({ error: "Errore lato server SHOW function" });
 
-    const movie = movieResults[0];
+    if (results.length === 0)
+      return res.status(404).json({ error: "Movie not found" });
+
+    const movie = results[0];
 
     connection.query(reviewsSql, [id], (err, reviewsResults) => {
-      if (err) {
-        console.error(err);
+      if (err)
         return res
           .status(500)
-          .json({ error: "Errore nel recupero delle recensioni" });
-      }
+          .json({ error: "Errore lato server SHOW function" });
 
       movie.reviews = reviewsResults;
-      res.json(movie);
+
+      res.json({
+        ...movie,
+        image: req.imagePath + movie.image,
+      });
     });
   });
 }
+
+function destroy(req, res) {
+  const { id } = req.params;
+
+  const sql = "DELETE FROM movies WHERE id = ?";
+
+  connection.query(sql, [id], (err) => {
+    if (err)
+      return res
+        .status(500)
+        .json({ error: "Errore lato server DESTROY function" });
+
+    res.sendStatus(204);
+  });
+}
+
+export { index, show, destroy };

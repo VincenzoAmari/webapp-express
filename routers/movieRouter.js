@@ -1,12 +1,22 @@
+// routes/movieRouter.js
 import express from "express";
-import { getAllMovies, getMovieById } from "../controllers/movieController.js";
-
 const router = express.Router();
 
-// Endpoint per ottenere tutti i film
-router.get("/", getAllMovies);
+// Importa il controller per i film
+import { index, show, destroy } from "../controllers/movieController.js";
 
-// Endpoint per ottenere un singolo film con recensioni
-router.get("/:id", getMovieById);
+// Rotte per i film
+
+// index
+// localhost:3000/api/movies
+router.get("/", index);
+
+// show
+// localhost:3000/api/movies/:id
+router.get("/:id", show);
+
+// destroy
+// localhost:3000/api/movies/:id
+router.delete("/:id", destroy);
 
 export default router;
