@@ -1,19 +1,19 @@
-const mysql = require("mysql2");
+import mysql from "mysql2";
 
-// Configurazione della connessione al database
-const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "root",
-  database: "blog",
+// Connessione al database
+const connection = mysql.createConnection({
+  host: process.env.DB_HOST || "localhost",
+  user: process.env.DB_USER || "root",
+  password: process.env.DB_PASSWORD || "",
+  database: process.env.DB_NAME || "db_movies",
 });
 
-db.connect((err) => {
+connection.connect((err) => {
   if (err) {
     console.error("Errore di connessione al database:", err);
     return;
   }
-  console.log("Connessione al database MySQL riuscita!");
+  console.log("Connesso al database MySQL!");
 });
 
-module.exports = db;
+export default connection;
