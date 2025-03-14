@@ -13,3 +13,11 @@ app.use("/movies", movieRouter);
 app.listen(port, () => {
   console.log(`Server in esecuzione su http://localhost:${port}`);
 });
+
+app
+  .listen(port, () => {
+    console.log(`Server in esecuzione su http://localhost:${port}`);
+  })
+  .on("error", (err) => {
+    console.error("Errore durante l'avvio del server:", err);
+  });

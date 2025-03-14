@@ -1,4 +1,4 @@
-import connection from "../db.js" assert { type: "module" };
+import connection from "../data/db.js";
 
 // Ottenere tutti i film
 export function getAllMovies(req, res) {
