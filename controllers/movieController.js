@@ -5,16 +5,18 @@ function index(req, res) {
 
   connection.query(sql, (err, results) => {
     if (err) {
-      console.error("Errore nella query INDEX:", err); // Aggiunto per debug
-      return res
-        .status(500)
-        .json({ error: "Errore lato server INDEX function" });
+      console.error("Errore nella query INDEX:", err);
+      return res.status(500).json({
+        error: "Errore lato server INDEX function",
+      });
     }
+
+    console.log(req.imagePath);
 
     const movies = results.map((movie) => {
       return {
         ...movie,
-        image: req.imagePath + movie.image,
+        image: movie.image ? req.imagePath + movie.image : null,
       };
     });
 
@@ -30,30 +32,32 @@ function show(req, res) {
 
   connection.query(movieSql, [id], (err, results) => {
     if (err) {
-      console.error("Errore nella query SHOW (movies):", err); // Aggiunto per debug
-      return res
-        .status(500)
-        .json({ error: "Errore lato server SHOW function" });
+      console.error("Errore nella query SHOW (movies):", err);
+      return res.status(500).json({
+        error: "Errore lato server SHOW function",
+      });
     }
 
     if (results.length === 0)
-      return res.status(404).json({ error: "Movie not found" });
+      return res.status(404).json({
+        error: "Movie not found",
+      });
 
     const movie = results[0];
 
     connection.query(reviewsSql, [id], (err, reviewsResults) => {
       if (err) {
-        console.error("Errore nella query SHOW (reviews):", err); // Aggiunto per debug
-        return res
-          .status(500)
-          .json({ error: "Errore lato server SHOW function" });
+        console.error("Errore nella query SHOW (reviews):", err);
+        return res.status(500).json({
+          error: "Errore lato server SHOW function",
+        });
       }
 
       movie.reviews = reviewsResults;
 
       res.json({
         ...movie,
-        image: req.imagePath + movie.image,
+        image: movie.image ? req.imagePath + movie.image : null,
       });
     });
   });
@@ -66,7 +70,7 @@ function destroy(req, res) {
 
   connection.query(sql, [id], (err) => {
     if (err) {
-      console.error("Errore nella query DESTROY:", err); // Aggiunto per debug
+      console.error("Errore nella query DESTROY:", err);
       return res
         .status(500)
         .json({ error: "Errore lato server DESTROY function" });
