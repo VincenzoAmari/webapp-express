@@ -1,6 +1,6 @@
 function errorsHandler(err, req, res, next) {
   res.status(500);
-  res.jason({
+  res.json({
     error: "Errors Handler",
     message: "errore interno al server",
   });
