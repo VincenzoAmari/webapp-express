@@ -16,4 +16,6 @@ router.get("/:id", getMovieById);
 // Rotta per eliminare un film
 router.delete("/:id", deleteMovie);
 
+// Rotta per creare una recensione
+router.post("/:id/reviews", storeReview);
 export default router;

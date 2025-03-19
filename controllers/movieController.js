@@ -11,8 +11,6 @@ function index(req, res) {
       });
     }
 
-    console.log(req.imagePath);
-
     const movies = results.map((movie) => {
       return {
         ...movie,
@@ -80,4 +78,44 @@ function destroy(req, res) {
   });
 }
 
-export { index as getMovies, show as getMovieById, destroy as deleteMovie };
+// funzione per salvare una recensione
+function storeReview(req, res) {
+  const { id } = req.params; // ID del film
+  const { name, vote } = req.body;
+
+  // Validazione dei dati
+  if (!name || !vote) {
+    return res.status(400).json({
+      error: "Nome e voto sono obbligatori",
+    });
+  }
+
+  const sql = "INSERT INTO reviews (movie_id, name, vote) VALUES (?, ?, ?)";
+  const values = [id, name, vote];
+
+  connection.query(sql, values, (err, result) => {
+    if (err) {
+      console.error("Errore nella query STORE REVIEW:", err);
+      return res.status(500).json({
+        error: "Errore lato server STORE REVIEW function",
+      });
+    }
+
+    res.status(201).json({
+      message: "Recensione creata con successo",
+      review: {
+        id: result.insertId,
+        movie_id: id,
+        name,
+        vote,
+      },
+    });
+  });
+}
+
+export {
+  index as getMovies,
+  show as getMovieById,
+  destroy as deleteMovie,
+  storeReview,
+};
