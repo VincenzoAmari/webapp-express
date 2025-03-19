@@ -5,6 +5,7 @@ import {
   getMovies,
   getMovieById,
   deleteMovie,
+  storeReview,
 } from "../controllers/movieController.js";
 
 // Rotta per ottenere tutti i film
