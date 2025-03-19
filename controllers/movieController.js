@@ -80,18 +80,18 @@ function destroy(req, res) {
 
 // funzione per salvare una recensione
 function storeReview(req, res) {
-  const { id } = req.params; // ID del film
-  const { name, vote } = req.body;
+  const { id } = req.params;
+  const { name, vote, text } = req.body;
 
-  // Validazione dei dati
-  if (!name || !vote) {
+  if (!name || !vote || !text) {
     return res.status(400).json({
-      error: "Nome e voto sono obbligatori",
+      error: "Nome, voto e testo sono obbligatori",
     });
   }
 
-  const sql = "INSERT INTO reviews (movie_id, name, vote) VALUES (?, ?, ?)";
-  const values = [id, name, vote];
+  const sql =
+    "INSERT INTO reviews (movie_id, name, vote, text) VALUES (?, ?, ?, ?)";
+  const values = [id, name, vote, text];
 
   connection.query(sql, values, (err, result) => {
     if (err) {
@@ -108,11 +108,11 @@ function storeReview(req, res) {
         movie_id: id,
         name,
         vote,
+        text,
       },
     });
   });
 }
-
 export {
   index as getMovies,
   show as getMovieById,
